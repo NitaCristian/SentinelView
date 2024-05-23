@@ -1,53 +1,27 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SentinelView</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
-</head>
-<body>
-<div class="container">
-    <div class="sidebar">
-        <div class="menu">
-            <h2>SentinelView</h2>
-            <ul>
-                <li><a href="{{ url_for('home') }}">Home</a></li>
-                <li><a href="#">Browse Clips</a></li>
-                <li><a href="{{ url_for('live_feed') }}">Live Feed</a></li>
-                <li><a href="{{ url_for('profile') }}">Settings</a></li>
-            </ul>
-        </div>
-    </div>
-    <div class="main-content">
-        <h2>Home</h2>
-        <div class="search-filter">
-            <label>
-                <input type="text" placeholder="Search...">
-            </label>
-            <button>Filter</button>
-        </div>
-        <table>
-            <thead>
+{% extends 'base.html' %}
+
+{% block title %}Home - SentinelView{% endblock %}
+
+{% block content %}
+    <h2>Home</h2>
+    <table>
+        <thead>
+        <tr>
+            <th>Id</th>
+            <th>Description</th>
+            <th>Camera</th>
+            <th>Date</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for clip in clips %}
             <tr>
-                <th>Id</th>
-                <th>Description</th>
-                <th>Camera</th>
-                <th>Date</th>
+                <td>{{ clip.id }}</td>
+                <td>{{ clip.description }}</td>
+                <td>{{ clip.camera }}</td>
+                <td>{{ clip.date }}</td>
             </tr>
-            </thead>
-            <tbody>
-            {% for clip in clips %}
-                <tr>
-                    <td>{{ clip.id }}</td>
-                    <td>{{ clip.description }}</td>
-                    <td>{{ clip.camera }}</td>
-                    <td>{{ clip.date }}</td>
-                </tr>
-            {% endfor %}
-            </tbody>
-        </table>
-    </div>
-</div>
-</body>
-</html>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

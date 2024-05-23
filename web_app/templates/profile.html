@@ -1,42 +1,20 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Edit Profile - SentinelView</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
-</head>
-<body>
-<div class="container">
-    <div class="sidebar">
-        <div class="menu">
-            <h2>SentinelView</h2>
-            <ul>
-                <li><a href="{{ url_for('home') }}">Home</a></li>
-                <li><a href="#">Browse Clips</a></li>
-                <li><a href="{{ url_for('live_feed') }}">Live Feed</a></li>
-                <li><a href="{{ url_for('profile') }}">Settings</a></li>
-            </ul>
+{% extends 'base.html' %}
+
+{% block title %}Profile - SentinelView{% endblock %}
+
+{% block content %}
+    <h2>Edit Profile</h2>
+    <div class="profile-header">
+        <img src="{{ user.profile_photo }}" alt="Profile Photo" class="profile-photo">
+        <div class="profile-info">
+            <h3>{{ user.name }}</h3>
         </div>
     </div>
-    <div class="main-content">
-        <h2>Edit profile</h2>
-        <div class="profile-header">
-            <img src="{{ url_for('static', filename=user['profile_photo']) }}" alt="Profile Photo"
-                 class="profile-photo">
-            <div class="profile-info">
-                <h3>{{ user['name'] }}</h3>
-                <p>Change profile photo</p>
-            </div>
-        </div>
-        <form action="{{ url_for('profile') }}" method="POST">
-            <label for="username">Username</label>
-            <input type="text" id="username" name="username" value="{{ '@' + user['username'] }}">
-            <label for="email">Email</label>
-            <input type="email" id="email" name="email" value="{{ user['email'] }}">
-            <button type="submit">Save changes</button>
-        </form>
-    </div>
-</div>
-</body>
-</html>
+    <form method="POST">
+        <label for="username">Username</label>
+        <input type="text" id="username" name="username" value="{{ user.username }}">
+        <label for="email">Email</label>
+        <input type="email" id="email" name="email" value="{{ user.email }}">
+        <button type="submit">Save changes</button>
+    </form>
+{% endblock %}
