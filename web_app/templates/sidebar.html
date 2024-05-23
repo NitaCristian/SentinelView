@@ -1,11 +1,30 @@
-<div class="sidebar">
-    <div class="menu">
+<nav class="col-md-2 d-none d-md-block sidebar">
+    <div class="sidebar-sticky">
         <h2>SentinelView</h2>
-        <ul>
-            <li><a href="{{ url_for('routes.home') }}">Home</a></li>
-            <li><a href="#">Browse Clips</a></li>
-            <li><a href="{{ url_for('routes.live_feed') }}">Live Feed</a></li>
-            <li><a href="{{ url_for('routes.profile') }}">Settings</a></li>
+        <ul class="nav flex-column">
+            <li class="nav-item">
+                <a class="nav-link text-dark {{ 'active' if request.endpoint == 'routes.home' else '' }}"
+                   href="{{ url_for('routes.home') }}">
+                    <i class="fas fa-home"></i> Home
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link text-dark" href="#">
+                    <i class="fas fa-folder-open"></i> Browse Clips
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link text-dark {{ 'active' if request.endpoint == 'routes.live_feed' else '' }}"
+                   href="{{ url_for('routes.live_feed') }}">
+                    <i class="fas fa-video"></i> Live Feed
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link text-dark {{ 'active' if request.endpoint == 'routes.profile' else '' }}"
+                   href="{{ url_for('routes.profile') }}">
+                    <i class="fas fa-cog"></i> Settings
+                </a>
+            </li>
         </ul>
     </div>
-</div>
+</nav>

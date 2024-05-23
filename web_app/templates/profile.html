@@ -4,17 +4,22 @@
 
 {% block content %}
     <h2>Edit Profile</h2>
-    <div class="profile-header">
-        <img src="{{ user.profile_photo }}" alt="Profile Photo" class="profile-photo">
-        <div class="profile-info">
-            <h3>{{ user.name }}</h3>
+    <div class="media mb-4">
+        <img class="align-self-start mr-3 rounded-circle" src="{{ user.profile_photo }}" alt="Profile Photo" width="80"
+             height="80">
+        <div class="media-body">
+            <h5 class="mt-0">{{ user.name }}</h5>
         </div>
     </div>
     <form method="POST">
-        <label for="username">Username</label>
-        <input type="text" id="username" name="username" value="{{ user.username }}">
-        <label for="email">Email</label>
-        <input type="email" id="email" name="email" value="{{ user.email }}">
-        <button type="submit">Save changes</button>
+        <div class="form-group">
+            <label for="username">Username</label>
+            <input type="text" class="form-control" id="username" name="username" value="{{ user.username }}">
+        </div>
+        <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" class="form-control" id="email" name="email" value="{{ user.email }}">
+        </div>
+        <button type="submit" class="btn btn-primary">Save changes</button>
     </form>
 {% endblock %}

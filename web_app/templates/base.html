@@ -4,14 +4,66 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}SentinelView{% endblock %}</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        body, html {
+            height: 100%;
+            margin: 0;
+        }
+
+        .container-fluid {
+            height: 100%;
+        }
+
+        .row {
+            height: 100%;
+        }
+
+        .sidebar {
+            height: 100%;
+            background-color: #f8f9fa;
+            padding: 20px;
+        }
+
+        .nav-link.active {
+            background-color: #e9ecef;
+            font-weight: bold;
+        }
+
+        .btn-primary {
+            background-color: #000;
+            border-color: #000;
+        }
+
+        .btn-primary:hover {
+            background-color: #333;
+            border-color: #333;
+        }
+
+        .btn-secondary {
+            background-color: #fff;
+            color: #000;
+            border-color: #000;
+        }
+
+        .btn-secondary:hover {
+            background-color: #e9ecef;
+            border-color: #333;
+        }
+    </style>
 </head>
 <body>
-<div class="container">
-    {% include 'sidebar.html' %}
-    <div class="main-content">
-        {% block content %}{% endblock %}
+<div class="container-fluid">
+    <div class="row">
+        {% include 'sidebar.html' %}
+        <main class="col-md-9 ml-sm-auto col-lg-10 px-4">
+            {% block content %}{% endblock %}
+        </main>
     </div>
 </div>
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
 </body>
 </html>

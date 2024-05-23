@@ -1,5 +1,5 @@
 import cv2
-from flask import Blueprint, render_template, Response, request, url_for, redirect
+from flask import Blueprint, render_template, Response, request, redirect, url_for
 
 routes = Blueprint('routes', __name__)
 
@@ -40,7 +40,7 @@ def profile():
         'name': 'Helena Hills',
         'username': 'username123',
         'email': 'email@domain.com',
-        'profile_photo': 'path/to/profile/photo.jpg'  # Placeholder path
+        'profile_photo': 'https://via.placeholder.com/80'  # Placeholder URL
     }
     return render_template('profile.html', user=user)
 
