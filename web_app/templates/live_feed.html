@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Live Feed - SentinelView</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+<div class="container">
+    <div class="sidebar">
+        <div class="menu">
+            <h2>SentinelView</h2>
+            <ul>
+                <li><a href="{{ url_for('home') }}">Home</a></li>
+                <li><a href="#">Browse Clips</a></li>
+                <li><a href="{{ url_for('live_feed') }}">Live Feed</a></li>
+                <li><a href="{{ url_for('profile') }}">Settings</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="main-content">
+        <h2>Live Feed</h2>
+        <div class="video-container">
+            <img src="{{ url_for('video_feed') }}" alt="Live Feed">
+        </div>
+    </div>
+</div>
+</body>
+</html>
