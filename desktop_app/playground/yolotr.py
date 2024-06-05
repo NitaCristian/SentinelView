@@ -1,5 +1,5 @@
 from ultralytics import YOLO
 
-model = YOLO('../models/yolov9c.pt')
+model = YOLO('../yolov8n.pt')
 
-results = model.track(source='files/Traffic_Laramie_1.mp4', show=True, tracker='bytetrack.yaml')
+results = model.track(source='../detections/20240605_181853.avi', show=True)

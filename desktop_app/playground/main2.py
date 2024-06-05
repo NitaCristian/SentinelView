@@ -93,6 +93,6 @@ def main(video_path, yolo_model_path, conf_threshold=0.5):
     cv2.destroyAllWindows()
 
 if __name__ == "__main__":
-    video_path = "./videos/Traffic_Laramie_1.mp4"
-    yolo_model_path = "./models/yolov8n.pt"
+    video_path = "../videos/Traffic_Laramie_1.mp4"
+    yolo_model_path = "../models/yolov8n.pt"
     main(video_path, yolo_model_path)
