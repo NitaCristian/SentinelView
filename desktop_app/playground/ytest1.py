@@ -1,7 +1,7 @@
 import cv2
 import numpy as np
 
-with open("coco.names", "r") as f:
+with open("../models/coco.names", "r") as f:
     classes = [line.strip() for line in f.readlines()]
 
 net = cv2.dnn.readNetFromDarknet("yolov3.cfg", "yolov3.weights")

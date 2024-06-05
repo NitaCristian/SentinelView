@@ -9,11 +9,11 @@ import numpy as np
 
 # Constants
 FILE_PATH = 'files/Traffic_Laramie_1.mp4'
-MODEL_PATH = 'yolov8n.pt'
+MODEL_PATH = '../models/yolov8n.pt'
 CONFIDENCE_THRESHOLD = 0.63
 
 # Load class names
-with open("coco.names", "r") as f:
+with open("../models/coco.names", "r") as f:
     classes = [line.strip() for line in f.readlines()]
 
 # Load the YOLO model
