@@ -160,3 +160,10 @@ cython_debug/
 .idea/
 web_app/.idea
 *.mp4
+*.avi
+*.pt
+*.cfg
+*.weights
+*.csv
+*.txt
+
