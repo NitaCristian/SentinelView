@@ -26,17 +26,24 @@
                     <i class="fas fa-cog"></i> Settings
                 </a>
             </li>
+            <li class="nav-item">
+                <a class="nav-link text-dark" href="{{ url_for('routes.logout') }}">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </a>
+            </li>
         </ul>
         <div class="mt-auto pt-3 user-section">
             {% if session.get('user') %}
-                <div class="media d-flex align-items-center">
-                    <img class="mr-3 rounded-circle" src="{{ session['user']['profile_photo'] }}" alt="Profile Photo"
-                         width="50" height="50">
-                    <div class="media-body">
-                        <h5 class="mt-0">{{ session['user']['username'] }}</h5>
-                        <a href="{{ url_for('routes.profile') }}" class="nav-link p-0">Profile</a>
+                <a href="{{ url_for('routes.profile') }}" class="nav-link p-0">
+                    <div class="media d-flex align-items-center">
+                        <img class="mr-3 rounded-circle" src="{{ session['user']['profile_photo'] }}"
+                             alt="Profile Photo"
+                             width="50" height="50">
+                        <div class="media-body">
+                            <h5 class="mt-0">{{ session['user']['username'] }}</h5>
+                        </div>
                     </div>
-                </div>
+                </a>
             {% else %}
                 <div class="mt-4">
                     <a class="nav-link btn btn-primary mb-2" href="{{ url_for('routes.login') }}">Login</a>

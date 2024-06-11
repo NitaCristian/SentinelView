@@ -15,4 +15,6 @@ def create_app():
 
 if __name__ == '__main__':
     main = create_app()
-    main.run(debug=True)
+    with main.app_context():
+        db.create_all()
+    main.run(debug=True, port=5001)

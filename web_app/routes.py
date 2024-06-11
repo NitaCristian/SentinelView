@@ -5,7 +5,7 @@ from datetime import datetime, timedelta
 
 routes = Blueprint('routes', __name__)
 
-API_BASE_URL = "http://127.0.0.1:5000/api"
+API_BASE_URL = "http://127.0.0.1:5001/api"
 
 
 @routes.route('/')
@@ -22,6 +22,12 @@ def home():
     ]
 
     return render_template('index.html', recent_events=recent_events, recent_events_count=len(recent_events))
+
+
+@routes.route('/logout')
+def logout():
+    session.pop('user', None)
+    return redirect(url_for('routes.home'))
 
 
 @routes.route('/browse-events')
@@ -68,13 +74,27 @@ def register():
     return render_template('register.html')
 
 
-@routes.route('/profile')
+@routes.route('/profile', methods=['GET', 'POST'])
 def profile():
     if 'user' not in session:
         return redirect(url_for('routes.login'))
 
     user = session['user']
-    response = requests.get(f"{API_BASE_URL}/user", headers={'Authorization': f"Bearer {user['token']}"})
+    if request.method == 'POST':
+        username = request.form['username']
+        email = request.form['email']
+        response = requests.post(f"{API_BASE_URL}/user",
+                                 json={'username': username, 'email': email},
+                                 headers={'Authorization': f"{user['token']}"})
+        if response.status_code == 200:
+            user['username'] = username
+            session['user'] = user
+            return redirect(url_for('routes.profile'))
+        else:
+            # Handle error, e.g., display error message
+            pass  # Placeholder for error handling
+
+    response = requests.get(f"{API_BASE_URL}/user", headers={'Authorization': f"{user['token']}"})
     if response.status_code == 200:
         user_info = response.json()
         return render_template('profile.html', user=user_info)

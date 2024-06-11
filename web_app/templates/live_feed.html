@@ -3,8 +3,10 @@
 {% block title %}Live Feed - SentinelView{% endblock %}
 
 {% block content %}
-    <h2>Live Feed</h2>
-    <div class="embed-responsive embed-responsive-16by9">
-        <iframe class="embed-responsive-item" src="{{ url_for('routes.video_feed') }}" allowfullscreen></iframe>
+    <div class="container">
+        <h2 class="mt-5">Live Feed</h2>
+        <div class="video-container">
+            <img class="embed-responsive-item" src="{{ url_for('routes.video_feed') }}" alt="Live Feed">
+        </div>
     </div>
 {% endblock %}

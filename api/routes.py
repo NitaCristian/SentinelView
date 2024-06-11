@@ -17,7 +17,7 @@ def register_user():
     new_user = User(username=data['username'], email=data['email'], password=data['password'])
     db.session.add(new_user)
     db.session.commit()
-    return jsonify({'message': 'User registered successfully'})
+    return jsonify({'message': 'User registered successfully'}), 201
 
 
 @api_bp.route('/login', methods=['POST'])
@@ -31,15 +31,31 @@ def login_user():
         return jsonify({'message': 'Invalid credentials'}), 401
 
 
-@api_bp.route('/user', methods=['GET'])
-def get_user_details():
-    token = request.headers.get('Authorization')
-    user_id = decode_token(token)
-    if user_id:
-        user = User.query.get(user_id)
-        if user:
-            return jsonify({'username': user.username, 'email': user.email})
-    return jsonify({'message': 'User not found'}), 404
+@api_bp.route('/user', methods=['GET', 'POST'])
+def user_details():
+    if request.method == 'GET':
+        token = request.headers.get('Authorization')
+        user_id = decode_token(token)
+        if user_id:
+            user = User.query.get(user_id)
+            if user:
+                return jsonify({'username': user.username, 'email': user.email})
+        return jsonify({'message': 'User not found'}), 404
+
+    elif request.method == 'POST':
+        token = request.headers.get('Authorization')
+        user_id = decode_token(token)
+        if user_id:
+            user = User.query.get(user_id)
+            if user:
+                data = request.get_json()
+                if 'username' in data:
+                    user.username = data['username']
+                if 'email' in data:
+                    user.email = data['email']
+                db.session.commit()
+                return jsonify({'message': 'User details updated successfully'}), 200
+        return jsonify({'message': 'User not found'}), 404
 
 
 @api_bp.route('/add_camera', methods=['POST'])
