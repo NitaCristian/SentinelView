@@ -138,3 +138,48 @@ form button:hover {
     height: auto;
     border: 1px solid #ccc;
 }
+
+body, html {
+    height: 100%;
+    margin: 0;
+}
+
+.container-fluid {
+    height: 100%;
+}
+
+.row {
+    height: 100%;
+}
+
+.sidebar {
+    height: 100%;
+    background-color: #f8f9fa;
+    padding: 20px;
+}
+
+.nav-link.active {
+    background-color: #e9ecef;
+    font-weight: bold;
+}
+
+.btn-primary {
+    background-color: #000;
+    border-color: #000;
+}
+
+.btn-primary:hover {
+    background-color: #333;
+    border-color: #333;
+}
+
+.btn-secondary {
+    background-color: #fff;
+    color: #000;
+    border-color: #000;
+}
+
+.btn-secondary:hover {
+    background-color: #e9ecef;
+    border-color: #333;
+}

@@ -1,9 +1,12 @@
 import cv2
-from flask import Blueprint, render_template, Response, request, redirect, url_for
+from flask import Blueprint, render_template, Response, request, redirect, url_for, session
+import requests
 
 routes = Blueprint('routes', __name__)
 
 camera = cv2.VideoCapture(0)
+
+API_URL = 'http://localhost:5000/api'  # Update this with your API URL
 
 
 def generate_frames():
@@ -53,3 +56,39 @@ def live_feed():
 @routes.route('/video_feed')
 def video_feed():
     return Response(generate_frames(), mimetype='multipart/x-mixed-replace; boundary=frame')
+
+
+@routes.route('/register', methods=['GET', 'POST'])
+def register():
+    if request.method == 'POST':
+        username = request.form['username']
+        email = request.form['email']
+        password = request.form['password']
+        data = {'username': username, 'email': email, 'password': password}
+        response = requests.post(f'{API_URL}/register', json=data)
+        if response.status_code == 200:
+            return redirect(url_for('routes.login'))
+        else:
+            return render_template('register.html', message='Registration failed. Please try again.')
+    return render_template('register.html')
+
+
+@routes.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+        data = {'username': username, 'password': password}
+        response = requests.post(f'{API_URL}/login', json=data)
+        if response.status_code == 200:
+            session['token'] = response.json()['token']
+            return redirect(url_for('routes.home'))
+        else:
+            return render_template('login.html', message='Invalid credentials. Please try again.')
+    return render_template('login.html')
+
+
+@routes.route('/logout')
+def logout():
+    session.pop('token', None)
+    return redirect(url_for('routes.home'))

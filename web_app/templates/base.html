@@ -6,52 +6,7 @@
     <title>{% block title %}SentinelView{% endblock %}</title>
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-    <style>
-        body, html {
-            height: 100%;
-            margin: 0;
-        }
-
-        .container-fluid {
-            height: 100%;
-        }
-
-        .row {
-            height: 100%;
-        }
-
-        .sidebar {
-            height: 100%;
-            background-color: #f8f9fa;
-            padding: 20px;
-        }
-
-        .nav-link.active {
-            background-color: #e9ecef;
-            font-weight: bold;
-        }
-
-        .btn-primary {
-            background-color: #000;
-            border-color: #000;
-        }
-
-        .btn-primary:hover {
-            background-color: #333;
-            border-color: #333;
-        }
-
-        .btn-secondary {
-            background-color: #fff;
-            color: #000;
-            border-color: #000;
-        }
-
-        .btn-secondary:hover {
-            background-color: #e9ecef;
-            border-color: #333;
-        }
-    </style>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
 <div class="container-fluid">
