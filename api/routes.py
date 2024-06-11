@@ -26,7 +26,7 @@ def login_user():
     user = User.query.filter_by(username=data['username'], password=data['password']).first()
     if user:
         token = generate_token(user.id)
-        return jsonify({'token': token.decode('UTF-8')})
+        return jsonify({'token': token})
     else:
         return jsonify({'message': 'Invalid credentials'}), 401
 
