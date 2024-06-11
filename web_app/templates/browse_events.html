@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block title %}Browse Events - SentinelView{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <h2 class="mt-5">Browse Events</h2>
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Description</th>
+                    <th>Camera</th>
+                    <th>Date</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for event in events %}
+                    <tr>
+                        <td>{{ event.id }}</td>
+                        <td>{{ event.description }}</td>
+                        <td>{{ event.camera }}</td>
+                        <td>{{ event.date }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}

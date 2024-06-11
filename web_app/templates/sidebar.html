@@ -1,5 +1,5 @@
 <nav class="col-md-2 d-none d-md-block sidebar">
-    <div class="sidebar-sticky">
+    <div class="sidebar-sticky d-flex flex-column h-100">
         <h2>SentinelView</h2>
         <ul class="nav flex-column">
             <li class="nav-item">
@@ -9,8 +9,9 @@
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link text-dark" href="#">
-                    <i class="fas fa-folder-open"></i> Browse Clips
+                <a class="nav-link text-dark {{ 'active' if request.endpoint == 'routes.browse_events' else '' }}"
+                   href="{{ url_for('routes.browse_events') }}">
+                    <i class="fas fa-folder-open"></i> Browse Events
                 </a>
             </li>
             <li class="nav-item">
@@ -26,5 +27,22 @@
                 </a>
             </li>
         </ul>
+        <div class="mt-auto pt-3 user-section">
+            {% if session.get('user') %}
+                <div class="media d-flex align-items-center">
+                    <img class="mr-3 rounded-circle" src="{{ session['user']['profile_photo'] }}" alt="Profile Photo"
+                         width="50" height="50">
+                    <div class="media-body">
+                        <h5 class="mt-0">{{ session['user']['username'] }}</h5>
+                        <a href="{{ url_for('routes.profile') }}" class="nav-link p-0">Profile</a>
+                    </div>
+                </div>
+            {% else %}
+                <div class="mt-4">
+                    <a class="nav-link btn btn-primary mb-2" href="{{ url_for('routes.login') }}">Login</a>
+                    <a class="nav-link btn btn-secondary" href="{{ url_for('routes.register') }}">Register</a>
+                </div>
+            {% endif %}
+        </div>
     </div>
 </nav>

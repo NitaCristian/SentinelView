@@ -3,27 +3,42 @@
 {% block title %}Home - SentinelView{% endblock %}
 
 {% block content %}
-    <h2>Home</h2>
-    <div class="table-responsive">
-        <table class="table table-striped">
-            <thead>
-            <tr>
-                <th>Id</th>
-                <th>Description</th>
-                <th>Camera</th>
-                <th>Date</th>
-            </tr>
-            </thead>
-            <tbody>
-            {% for clip in clips %}
-                <tr>
-                    <td>{{ clip.id }}</td>
-                    <td>{{ clip.description }}</td>
-                    <td>{{ clip.camera }}</td>
-                    <td>{{ clip.date }}</td>
-                </tr>
-            {% endfor %}
-            </tbody>
-        </table>
+    <div class="container">
+        <h2 class="mt-5">Overview</h2>
+        <div class="row">
+            <!-- Summary of Events in Last 24 Hours -->
+            <div class="col-md-4">
+                <div class="card text-white bg-info mb-3">
+                    <div class="card-header">Events in Last 24 Hours</div>
+                    <div class="card-body">
+                        <h5 class="card-title">{{ recent_events_count }}</h5>
+                        {% if recent_events_count == 0 %}
+                            <p class="card-text"><i class="fas fa-check-circle fa-2x"></i> Everything is fine!</p>
+                        {% else %}
+                            <p class="card-text">Check out the latest events below.</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- List of Recent Events -->
+            <div class="col-md-8">
+                <div class="card mb-3">
+                    <div class="card-header">Recent Events</div>
+                    <ul class="list-group list-group-flush">
+                        {% if recent_events %}
+                            {% for event in recent_events %}
+                                <li class="list-group-item">
+                                    <i class="fas fa-video"></i> {{ event.description }}
+                                    <span class="badge badge-secondary">{{ event.date }}</span>
+                                </li>
+                            {% endfor %}
+                        {% else %}
+                            <li class="list-group-item">No recent events.</li>
+                        {% endif %}
+                    </ul>
+                </div>
+            </div>
+        </div>
     </div>
 {% endblock %}
