@@ -42,6 +42,30 @@ def browse_events():
     return render_template('browse_events.html', events=events)
 
 
+@routes.route('/event/<int:event_id>', methods=['GET'])
+def event_details(event_id):
+    if 'user' not in session:
+        return redirect(url_for('routes.login'))
+
+    # Fetch event details from the API
+    response_event = requests.get(f"{API_BASE_URL}/get_event_details/{event_id}")
+    event = response_event.json() if response_event.status_code == 200 else {}
+
+    # If event details are fetched successfully, fetch the associated footage
+    if event:
+        footage_id = event.get('footage_id')
+        if footage_id:
+            response_footage = requests.get(f"{API_BASE_URL}/get_footage_details/{footage_id}")
+            footage = response_footage.json() if response_footage.status_code == 200 else None
+        else:
+            footage = None
+    else:
+        footage = None
+
+    # Render a template with the event details, including the footage
+    return render_template('event_details.html', event=event, footage=footage)
+
+
 @routes.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':

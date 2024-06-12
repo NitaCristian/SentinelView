@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% block title %}Event Details - SentinelView{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <h2 class="mt-5">Event Details</h2>
+        <div class="card mt-4">
+            <div class="card-header">
+                Event Information
+            </div>
+            <div class="card-body">
+                <h5 class="card-title">Event: {{ event.title }}</h5>
+                <p class="card-text">Timestamp: {{ event.timestamp }}</p>
+                <p class="card-text">Camera: {{ event.camera_name }}</p>
+                <p class="card-text">Description: {{ event.description }}</p>
+            </div>
+        </div>
+
+        <div class="card mt-4">
+            <div class="card-header">
+                Footage
+            </div>
+            <div class="card-body">
+                <video controls style="max-width: 100%;">
+                    <source src="../desktop_app/analyses/{{ footage.file_path }}" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+            </div>
+        </div>
+
+        <div class="card mt-4">
+            <div class="card-header">
+                Analysis
+            </div>
+            <div class="card-body">
+                <p class="card-text">Add your analysis content here...</p>
+            </div>
+        </div>
+    </div>
+{% endblock %}

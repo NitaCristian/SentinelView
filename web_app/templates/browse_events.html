@@ -20,9 +20,10 @@
                     {% for event in events %}
                         <tr>
                             <td>{{ event.id }}</td>
-                            <td>{{ event.title }}</td>
+                            <td>
+                                <a href="{{ url_for('routes.event_details', event_id=event.id) }}">{{ event.title }}</a>
+                            </td>
                             <td>Camera 0</td>
-{#                            <td>{{ event.camera }}</td>#}
                             <td>{{ event.timestamp }}</td>
                         </tr>
                     {% endfor %}
