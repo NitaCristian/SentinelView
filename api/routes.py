@@ -17,7 +17,7 @@ def register_user():
     new_user = User(username=data['username'], email=data['email'], password=data['password'])
     db.session.add(new_user)
     db.session.commit()
-    return jsonify({'message': 'User registered successfully'}), 201
+    return jsonify({'message': 'User registered successfully', 'id': new_user.id}), 201
 
 
 @api_bp.route('/login', methods=['POST'])
@@ -67,7 +67,7 @@ def add_camera():
         new_camera = Camera(name=data['name'], location=data['location'], ip_address=data['ip_address'])
         db.session.add(new_camera)
         db.session.commit()
-        return jsonify({'message': 'Camera added successfully'})
+        return jsonify({'message': 'Camera added successfully', 'id': new_camera.id})
     return jsonify({'message': 'User not authenticated'}), 401
 
 
@@ -77,8 +77,9 @@ def get_cameras():
     user_id = decode_token(token)
     if user_id:
         cameras = Camera.query.all()
-        camera_list = [{'name': camera.name, 'location': camera.location, 'ip_address': camera.ip_address} for camera in
-                       cameras]
+        camera_list = [
+            {'id': camera.id, 'name': camera.name, 'location': camera.location, 'ip_address': camera.ip_address} for
+            camera in cameras]
         return jsonify({'cameras': camera_list})
     return jsonify({'message': 'User not authenticated'}), 401
 
@@ -117,8 +118,8 @@ def delete_camera(camera_id):
 @api_bp.route('/get_events', methods=['GET'])
 def get_events():
     events = Event.query.all()
-    event_list = [{'event_type': event.event_type, 'timestamp': event.timestamp, 'description': event.description} for
-                  event in events]
+    event_list = [{'id': event.id, 'event_type': event.event_type, 'timestamp': event.timestamp, 'title': event.title}
+                  for event in events]
     return jsonify({'events': event_list})
 
 
@@ -126,25 +127,27 @@ def get_events():
 def get_event_details(event_id):
     event = Event.query.get(event_id)
     if event:
-        return jsonify({'event_type': event.event_type, 'timestamp': event.timestamp, 'description': event.description})
+        return jsonify(
+            {'id': event.id, 'event_type': event.event_type, 'timestamp': event.timestamp, 'title': event.title,
+             'footage_id': event.footage_id})
     return jsonify({'message': 'Event not found'}), 404
 
 
 @api_bp.route('/insert_event', methods=['POST'])
 def insert_event():
     data = request.get_json()
-    new_event = Event(event_type=data['event_type'], timestamp=datetime.utcnow(), description=data.get('description'))
+    new_event = Event(event_type=data['event_type'], timestamp=datetime.utcnow(), title=data.get('title'),
+                      footage_id=data['footage_id'])
     db.session.add(new_event)
     db.session.commit()
-    return jsonify({'message': 'Event inserted successfully'})
+    return jsonify({'message': 'Event inserted successfully', 'id': new_event.id})
 
 
 @api_bp.route('/get_footage', methods=['GET'])
 def get_footage():
     footages = Footage.query.all()
-    footage_list = [
-        {'file_path': footage.file_path, 'duration': footage.duration, 'creation_timestamp': footage.creation_timestamp}
-        for footage in footages]
+    footage_list = [{'id': footage.id, 'file_path': footage.file_path, 'duration': footage.duration,
+                     'creation_timestamp': footage.creation_timestamp} for footage in footages]
     return jsonify({'footage': footage_list})
 
 
@@ -152,7 +155,7 @@ def get_footage():
 def get_footage_details(footage_id):
     footage = Footage.query.get(footage_id)
     if footage:
-        return jsonify({'file_path': footage.file_path, 'duration': footage.duration,
+        return jsonify({'id': footage.id, 'file_path': footage.file_path, 'duration': footage.duration,
                         'creation_timestamp': footage.creation_timestamp})
     return jsonify({'message': 'Footage not found'}), 404
 
@@ -163,13 +166,13 @@ def insert_footage():
     new_footage = Footage(file_path=data['file_path'], duration=data['duration'], creation_timestamp=datetime.utcnow())
     db.session.add(new_footage)
     db.session.commit()
-    return jsonify({'message': 'Footage inserted successfully'})
+    return jsonify({'message': 'Footage inserted successfully', 'id': new_footage.id})
 
 
 @api_bp.route('/get_notifications', methods=['GET'])
 def get_notifications():
     notifications = Notification.query.all()
-    notification_list = [{'user_id': notification.user_id, 'event_id': notification.event_id,
+    notification_list = [{'id': notification.id, 'user_id': notification.user_id, 'event_id': notification.event_id,
                           'notification_type': notification.notification_type,
                           'creation_timestamp': notification.creation_timestamp} for notification in notifications]
     return jsonify({'notifications': notification_list})

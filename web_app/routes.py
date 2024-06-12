@@ -36,8 +36,8 @@ def browse_events():
         return redirect(url_for('routes.login'))
 
     # Fetch all events from the API
-    response = requests.get(f"{API_BASE_URL}/events")
-    events = response.json() if response.status_code == 200 else []
+    response = requests.get(f"{API_BASE_URL}/get_events")
+    events = response.json()['events'] if response.status_code == 200 else []
 
     return render_template('browse_events.html', events=events)
 

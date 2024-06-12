@@ -1,10 +1,104 @@
 import math
 import os
 import sys
-
 import cv2
+import requests
 from ultralytics import YOLO
 from deep_sort_realtime.deepsort_tracker import DeepSort
+
+API_URL = "http://127.0.0.1:5001/api"
+
+
+def upload_to_api(video_path, summary_path):
+    """
+    Uploads the annotated video and summary to the API.
+
+    Parameters:
+    video_path (str): Path to the annotated video file.
+    summary_path (str): Path to the summary text file.
+    """
+    try:
+        # Read the summary file content
+        with open(summary_path, 'r') as summary_file:
+            summary_content = summary_file.read()
+
+        # Prepare the data payload
+        data = {
+            'file_path': os.path.basename(video_path),
+            'duration': get_video_duration(video_path)
+        }
+
+        headers = {
+            'Content-Type': 'application/json'
+        }
+
+        proxies = {'https': 'http://127.0.0.1:5001'}
+        # Send the POST request to the API
+        response = requests.post(f'{API_URL}/insert_footage', headers=headers, json=data, verify=False, proxies=proxies)
+
+        if response.status_code == 200:
+            print("Files uploaded successfully.")
+            footage_id = response.json().get('id')
+
+            # Insert an event associated with this footage
+            insert_event(footage_id, summary_content)
+
+        else:
+            print(f"Failed to upload files. Status code: {response.status_code}")
+            print("Response:", response.text)
+    except Exception as e:
+        print(f"An error occurred while uploading files: {e}")
+
+
+def insert_event(footage_id, summary):
+    """
+    Inserts an event related to the uploaded footage.
+
+    Parameters:
+    footage_id (int): The ID of the uploaded footage.
+    summary (str): Summary details to include in the event title.
+    """
+    try:
+        event_data = {
+            'event_type': 'Person Detected',
+            'title': f'Footage ID {footage_id}',
+            'footage_id': footage_id
+        }
+
+        headers = {
+            'Content-Type': 'application/json'
+        }
+
+        proxies = {'https': 'http://127.0.0.1:5001'}
+        # Send the POST request to insert the event
+        response = requests.post(f"{API_URL}/insert_event", headers=headers, json=event_data, verify=False,
+                                 proxies=proxies)
+
+        if response.status_code == 200:
+            print("Event inserted successfully.")
+        else:
+            print(f"Failed to insert event. Status code: {response.status_code}")
+            print("Response:", response.text)
+    except Exception as e:
+        print(f"An error occurred while inserting event: {e}")
+
+
+def get_video_duration(video_path):
+    """
+    Get the duration of the video in seconds.
+
+    Parameters:
+    video_path (str): Path to the video file.
+
+    Returns:
+    float: Duration of the video in seconds.
+    """
+    cap = cv2.VideoCapture(video_path)
+    fps = cap.get(cv2.CAP_PROP_FPS)
+    frame_count = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
+    duration = frame_count / fps
+    cap.release()
+    return duration
 
 
 def process_video(video_path):
@@ -89,6 +183,9 @@ def process_video(video_path):
     with open(summary_path, 'w') as file:
         for line in summary_lines:
             file.write(line + '\n')
+
+    # Upload the annotated video and summary to the API
+    upload_to_api(annotated_video_path, summary_path)
 
 
 if __name__ == "__main__":

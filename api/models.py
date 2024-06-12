@@ -24,7 +24,8 @@ class Event(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     event_type = db.Column(db.String(50), nullable=False)
     timestamp = db.Column(db.DateTime, default=datetime.utcnow)
-    description = db.Column(db.String(200), nullable=True)
+    title = db.Column(db.String(200), nullable=False)  # Changed from description to title
+    footage_id = db.Column(db.Integer, db.ForeignKey('footage.id'), nullable=False)  # New field
 
 
 class Footage(db.Model):
