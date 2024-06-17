@@ -124,7 +124,7 @@ class VideoThread(QThread):
         self.fps_start_time = time.time()
 
     def start_camera(self, camera_index=0):
-        self.cap = cv2.VideoCapture()
+        self.cap = cv2.VideoCapture(0)
         if not self.cap.isOpened():
             print("Error: Could not open camera.")
             return
