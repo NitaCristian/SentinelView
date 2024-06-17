@@ -142,7 +142,7 @@ def video_feed():
 # Generate frames for live video feed
 def generate_frames():
     while True:
-        success, frame = camera.read()
+        success, frame = False, False#camera.read()
         if not success:
             break
         else:
@@ -151,4 +151,4 @@ def generate_frames():
             yield b'--frame\r\n' b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n'
 
 
-camera = cv2.VideoCapture(0)
+#camera = cv2.VideoCapture()
