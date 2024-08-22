@@ -10,6 +10,9 @@ API_BASE_URL = "http://127.0.0.1:5001/api"
 
 @routes.route('/')
 def home():
+    if 'user' not in session:
+        return redirect(url_for('routes.login'))
+
     # Fetch events from the API
     response = requests.get(f"{API_BASE_URL}/events")
     events = response.json() if response.status_code == 200 else []
@@ -26,7 +29,8 @@ def home():
 
 @routes.route('/logout')
 def logout():
-    session.pop('user', None)
+    if 'user' not in session:
+        session.pop('user', None)
     return redirect(url_for('routes.home'))
 
 
