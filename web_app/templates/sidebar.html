@@ -26,11 +26,13 @@
                     <i class="fas fa-cog"></i> Settings
                 </a>
             </li>
+            {% if session.get('user') %}
             <li class="nav-item">
                 <a class="nav-link text-dark" href="{{ url_for('routes.logout') }}">
                     <i class="fas fa-sign-out-alt"></i> Logout
                 </a>
             </li>
+            {% endif %}
         </ul>
         <div class="mt-auto pt-3 user-section">
             {% if session.get('user') %}
