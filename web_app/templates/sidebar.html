@@ -1,62 +1,3 @@
-{#<nav class="col-md-2 d-none d-md-block sidebar">#}
-{#    <div class="sidebar-sticky d-flex flex-column h-100">#}
-{#        <h2>SentinelView</h2>#}
-{#        <ul class="nav flex-column">#}
-{#            <li class="nav-item">#}
-{#                <a class="nav-link text-dark {{ 'active' if request.endpoint == 'routes.home' else '' }}"#}
-{#                   href="{{ url_for('routes.home') }}">#}
-{#                    <i class="fas fa-home"></i> Home#}
-{#                </a>#}
-{#            </li>#}
-{#            <li class="nav-item">#}
-{#                <a class="nav-link text-dark {{ 'active' if request.endpoint == 'routes.browse_events' else '' }}"#}
-{#                   href="{{ url_for('routes.browse_events') }}">#}
-{#                    <i class="fas fa-folder-open"></i> Browse Events#}
-{#                </a>#}
-{#            </li>#}
-{#            <li class="nav-item">#}
-{#                <a class="nav-link text-dark {{ 'active' if request.endpoint == 'routes.live_feed' else '' }}"#}
-{#                   href="{{ url_for('routes.live_feed') }}">#}
-{#                    <i class="fas fa-video"></i> Live Feed#}
-{#                </a>#}
-{#            </li>#}
-{#            <li class="nav-item">#}
-{#                <a class="nav-link text-dark {{ 'active' if request.endpoint == 'routes.profile' else '' }}"#}
-{#                   href="{{ url_for('routes.profile') }}">#}
-{#                    <i class="fas fa-cog"></i> Settings#}
-{#                </a>#}
-{#            </li>#}
-{#            {% if session.get('user') %}#}
-{#                <li class="nav-item">#}
-{#                    <a class="nav-link text-dark" href="{{ url_for('routes.logout') }}">#}
-{#                        <i class="fas fa-sign-out-alt"></i> Logout#}
-{#                    </a>#}
-{#                </li>#}
-{#            {% endif %}#}
-{#        </ul>#}
-{#        <div class="mt-auto pt-3 user-section">#}
-{#            {% if session.get('user') %}#}
-{#                <a href="{{ url_for('routes.profile') }}" class="nav-link p-0">#}
-{#                    <div class="media d-flex align-items-center">#}
-{#                        <img class="mr-3 rounded-circle" src="{{ session['user']['profile_photo'] }}"#}
-{#                             alt="Profile Photo"#}
-{#                             width="50" height="50">#}
-{#                        <div class="media-body">#}
-{#                            <h5 class="mt-0">{{ session['user']['username'] }}</h5>#}
-{#                        </div>#}
-{#                    </div>#}
-{#                </a>#}
-{#            {% else %}#}
-{#                <div class="mt-4">#}
-{#                    <a class="nav-link btn btn-primary mb-2" href="{{ url_for('routes.login') }}">Login</a>#}
-{#                    <a class="nav-link btn btn-secondary" href="{{ url_for('routes.register') }}">Register</a>#}
-{#                </div>#}
-{#            {% endif %}#}
-{#        </div>#}
-{#    </div>#}
-{#</nav>#}
-
-
 <div class="d-flex flex-column flex-shrink-0 p-3 text-white bg-dark" style="width: 280px;">
     <a href="{{ url_for('routes.home') }}"
        class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-white text-decoration-none">
@@ -102,14 +43,14 @@
             </li>
         {% endif %}
     </ul>
-    {% if session.get('user') %}#}
+    {% if session.get('user') %}
         <hr>
         <div class="dropdown">
             <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle"
                id="dropdownUser1"
                data-bs-toggle="dropdown" aria-expanded="false">
-                <img src="{{ session['user']['profile_photo'] if 'user' in session and session['user']['profile_photo'] != "" else "https://picsum.photos/200?random" }}"
-                     alt="" class="rounded-circle me-2" width="32" height="32">
+                <img src="{{ session['user']['profile_photo'] if session['user']['profile_photo'] else "https://picsum.photos/seed/" + session['user']['username'] + "/200" }}"
+                     alt="Profile picture" class="rounded-circle me-2" width="32" height="32">
                 <strong>{{ session['user']['username'] }}</strong>
             </a>
             <ul class="dropdown-menu dropdown-menu-dark text-small shadow" aria-labelledby="dropdownUser1" style="">
