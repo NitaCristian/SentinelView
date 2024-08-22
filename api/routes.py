@@ -2,8 +2,13 @@ from flask import Blueprint, jsonify, request
 from models import User, Camera, Event, Footage, Notification, db
 from auth import generate_token, decode_token
 from datetime import datetime
+from werkzeug.utils import secure_filename
+import os
 
 api_bp = Blueprint('api', __name__)
+
+UPLOAD_FOLDER = 'uploads/profile_pictures'  # Directory to save uploaded files
+ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
 
 
 @api_bp.route('/', methods=['GET'])
@@ -31,6 +36,28 @@ def login_user():
         return jsonify({'message': 'Invalid credentials'}), 401
 
 
+@api_bp.route('/validate_password', methods=['POST'])
+def validate_password():
+    token = request.headers.get('Authorization')
+    user_id = decode_token(token)
+
+    if user_id:
+        user = User.query.get(user_id)
+        if user:
+            data = request.get_json()
+            provided_password = data.get('password')
+
+            # Assuming `User` model has a method to verify password
+            if user.password == provided_password:
+                return jsonify({'message': 'Password is valid'}), 200
+
+            return jsonify({'message': 'Invalid password'}), 401
+
+        return jsonify({'message': 'User not found'}), 404
+
+    return jsonify({'message': 'User not authenticated'}), 401
+
+
 @api_bp.route('/user', methods=['GET', 'POST'])
 def user_details():
     if request.method == 'GET':
@@ -53,9 +80,49 @@ def user_details():
                     user.username = data['username']
                 if 'email' in data:
                     user.email = data['email']
+                if 'password' in data:
+                    user.password = data['password']
                 db.session.commit()
                 return jsonify({'message': 'User details updated successfully'}), 200
         return jsonify({'message': 'User not found'}), 404
+
+
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+
+@api_bp.route('/upload_profile_picture', methods=['POST'])
+def upload_profile_picture():
+    token = request.headers.get('Authorization')
+    user_id = decode_token(token)
+
+    if user_id:
+        user = User.query.get(user_id)
+        if user:
+            if 'profile_picture' not in request.files:
+                return jsonify({'message': 'No file part'}), 400
+
+            file = request.files['profile_picture']
+            if file.filename == '':
+                return jsonify({'message': 'No selected file'}), 400
+
+            if file and allowed_file(file.filename):
+                filename = secure_filename(file.filename)
+                file_path = os.path.join(UPLOAD_FOLDER, filename)
+                file.save(file_path)
+
+                # Update user profile with the new profile picture URL
+                user.profile_photo = file_path
+                db.session.commit()
+
+                return jsonify(
+                    {'message': 'Profile picture uploaded successfully', 'profile_photo_url': file_path}), 200
+
+            return jsonify({'message': 'Invalid file type'}), 400
+
+        return jsonify({'message': 'User not found'}), 404
+
+    return jsonify({'message': 'User not authenticated'}), 401
 
 
 @api_bp.route('/add_camera', methods=['POST'])

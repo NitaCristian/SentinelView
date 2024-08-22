@@ -109,18 +109,57 @@ def profile():
 
     user = session['user']
     if request.method == 'POST':
-        username = request.form['username']
-        email = request.form['email']
-        response = requests.post(f"{API_BASE_URL}/user",
-                                 json={'username': username, 'email': email},
-                                 headers={'Authorization': f"{user['token']}"})
-        if response.status_code == 200:
-            user['username'] = username
-            session['user'] = user
-            return redirect(url_for('routes.profile'))
-        else:
-            # Handle error, e.g., display error message
-            pass  # Placeholder for error handling
+        # Handle profile update
+        username = request.form.get('username')
+        email = request.form.get('email')
+        new_password = request.form.get('new_password')
+        confirm_password = request.form.get('confirm_password')
+        current_password = request.form.get('current_password')
+        profile_picture = request.files.get('profile_picture')
+
+        if new_password and (new_password != confirm_password):
+            # Handle password mismatch error
+            return render_template('profile.html', user=user, error="Passwords do not match")
+
+        if current_password:
+            # Validate current password if changing password
+            response = requests.post(f"{API_BASE_URL}/validate_password",
+                                     json={'password': current_password},
+                                     headers={'Authorization': f"{user['token']}"})
+            if response.status_code != 200:
+                # Handle current password validation error
+                return render_template('profile.html', user=user, error="Current password is incorrect")
+
+        if username and username != user['username'] or email and email != user['email'] or new_password:
+            user_update_payload = {'username': username, 'email': email}
+            if new_password:
+                user_update_payload['password'] = new_password
+
+            response = requests.post(f"{API_BASE_URL}/user",
+                                     json=user_update_payload,
+                                     headers={'Authorization': f"{user['token']}"})
+            if response.status_code == 200:
+                user['username'] = username
+                user['email'] = email
+                if new_password:
+                    # Log the user out if password changed (optional)
+                    session.pop('user', None)
+                    return redirect(url_for('routes.login'))
+
+        # Handle profile picture upload
+        if profile_picture:
+            file = {'profile_picture': (profile_picture.filename, profile_picture.stream, profile_picture.content_type)}
+            response = requests.post(f"{API_BASE_URL}/upload_profile_picture",
+                                     files=file,
+                                     headers={'Authorization': f"{user['token']}"})
+            if response.status_code == 200:
+                user['profile_photo'] = response.json().get('profile_photo_url')
+            else:
+                # Handle error
+                return render_template('profile.html', user=user, error="Failed to upload profile picture")
+
+        session['user'] = user
+        return redirect(url_for('routes.profile'))
 
     response = requests.get(f"{API_BASE_URL}/user", headers={'Authorization': f"{user['token']}"})
     if response.status_code == 200:
@@ -146,7 +185,7 @@ def video_feed():
 # Generate frames for live video feed
 def generate_frames():
     while True:
-        success, frame = False, False#camera.read()
+        success, frame = False, False  # camera.read()
         if not success:
             break
         else:
@@ -154,5 +193,4 @@ def generate_frames():
             frame = buffer.tobytes()
             yield b'--frame\r\n' b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n'
 
-
-#camera = cv2.VideoCapture()
+# camera = cv2.VideoCapture()

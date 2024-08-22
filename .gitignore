@@ -167,3 +167,4 @@ web_app/.idea
 *.csv
 *.txt
 
+/uploads
