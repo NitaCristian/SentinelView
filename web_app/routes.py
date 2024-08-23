@@ -2,7 +2,7 @@ import cv2
 from flask import Blueprint, render_template, request, redirect, url_for, session, Response
 import requests
 from datetime import datetime, timedelta
-
+from collections import Counter
 routes = Blueprint('routes', __name__)
 
 API_BASE_URL = "http://127.0.0.1:5001/api"
@@ -24,7 +24,25 @@ def home():
         if datetime.strptime(event['date'], '%Y-%m-%d %H:%M:%S') >= now - timedelta(hours=24)
     ]
 
-    return render_template('index.html', recent_events=recent_events, recent_events_count=len(recent_events))
+    # Generate dates for the last two weeks
+    today = now.date()
+    dates = [(today - timedelta(days=i)).strftime('%Y-%m-%d') for i in range(13, -1, -1)]
+
+    # Initialize a Counter for event counts per day
+    event_counts_dict = Counter(
+        datetime.strptime(event['date'], '%Y-%m-%d %H:%M:%S').strftime('%Y-%m-%d')
+        for event in events if
+        datetime.strptime(event['date'], '%Y-%m-%d %H:%M:%S').date() in [today - timedelta(days=i) for i in range(14)]
+    )
+
+    # Create a list of event counts corresponding to the `dates` list
+    event_counts = [event_counts_dict.get(date, 0) for date in dates]
+
+    return render_template('index.html',
+                           recent_events=recent_events,
+                           recent_events_count=len(recent_events),
+                           dates=dates,
+                           event_counts=event_counts)
 
 
 @routes.route('/logout')

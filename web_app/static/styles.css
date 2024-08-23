@@ -1,6 +1,6 @@
 body {
-    background-color: #FFEBEB; /* Pastel Pink background */
-    color: #5A3D3D; /* Deep Rose text */
+    background-color: #FFEBEB;
+    color: #5A3D3D;
     min-height: 100vh;
 }
 
@@ -13,56 +13,17 @@ main {
     overflow-y: hidden;
 }
 
-.container {
-    display: flex;
-    flex-direction: column;
-}
-
-.sidebar {
-    width: 200px;
-    background-color: #FFCCCC; /* Pastel Red for sidebar background */
-    padding: 20px;
-    color: #5A3D3D; /* Deep Rose text */
-}
-
-.sidebar .menu h2 {
-    margin: 0 0 20px;
-    color: #FF6B6B; /* Pastel Coral for headings */
-}
-
-.sidebar .menu ul {
-    list-style-type: none;
-    padding: 0;
-}
-
-.sidebar .menu ul li {
-    margin-bottom: 10px;
-}
-
-.sidebar .menu ul li a {
-    text-decoration: none;
-    color: #5A3D3D; /* Deep Rose links */
-    transition: color 0.3s ease, background-color 0.3s ease;
-}
-
-.sidebar .menu ul li a:hover,
-.sidebar .menu ul li a.active {
-    background-color: #FF9E9E; /* Pastel Coral for active and hover links */
-    color: #5A3D3D; /* Deep Rose text on hover/active */
-    padding: 5px;
-    border-radius: 4px;
-}
 
 .main-content {
     flex-grow: 1;
     padding: 20px;
-    background-color: #FFEBEB; /* Pastel Pink background */
-    color: #5A3D3D; /* Deep Rose text */
+    background-color: #FFEBEB;
+    color: #5A3D3D;
 }
 
 .main-content h2 {
     margin-top: 0;
-    color: #FF6B6B; /* Pastel Coral for headings */
+    color: #FF6B6B;
 }
 
 .search-filter {
@@ -74,16 +35,16 @@ main {
 .search-filter input[type="text"] {
     flex-grow: 1;
     padding: 5px;
-    background-color: #FFDFDF; /* Very Light Pastel Pink for input background */
-    color: #5A3D3D; /* Deep Rose text */
-    border: 1px solid #FF6B6B; /* Pastel Coral border */
+    background-color: #FFDFDF;
+    color: #5A3D3D;
+    border: 1px solid #FF6B6B;
     border-radius: 4px;
 }
 
 .search-filter button {
     padding: 5px 10px;
-    background-color: #FF9E9E; /* Pastel Coral for button background */
-    color: #5A3D3D; /* Deep Rose text */
+    background-color: #FF9E9E;
+    color: #5A3D3D;
     border: none;
     border-radius: 4px;
     cursor: pointer;
@@ -91,7 +52,7 @@ main {
 }
 
 .search-filter button:hover {
-    background-color: #FF7F7F; /* Slightly darker Pastel Coral on hover */
+    background-color: #FF7F7F;
 }
 
 table {
@@ -100,15 +61,15 @@ table {
 }
 
 table th, table td {
-    border: 1px solid #FFCCCC; /* Pastel Red border */
+    border: 1px solid #FFCCCC;
     padding: 8px;
     text-align: left;
-    color: #5A3D3D; /* Deep Rose text */
+    color: #5A3D3D;
 }
 
 table th {
-    background-color: #FF6B6B; /* Pastel Coral for table headers */
-    color: #5A3D3D; /* Deep Rose text */
+    background-color: #FF6B6B;
+    color: #5A3D3D;
 }
 
 .profile-header {
@@ -122,7 +83,7 @@ table th {
     height: 80px;
     border-radius: 50%;
     margin-right: 20px;
-    border: 2px solid #FF9E9E; /* Pastel Coral border */
+    border: 2px solid #FF9E9E;
 }
 
 .profile-info {
@@ -132,7 +93,7 @@ table th {
 
 .profile-info h3 {
     margin: 0;
-    color: #FF6B6B; /* Pastel Coral for profile headings */
+    color: #FF6B6B;
 }
 
 form {
@@ -143,16 +104,16 @@ form {
 
 form label {
     font-weight: bold;
-    color: #5A3D3D; /* Deep Rose text */
+    color: #5A3D3D;
 }
 
 form input[type="text"],
 form input[type="email"] {
     padding: 10px;
     font-size: 14px;
-    background-color: #FFDFDF; /* Very Light Pastel Pink for input background */
-    color: #5A3D3D; /* Deep Rose text */
-    border: 1px solid #FF6B6B; /* Pastel Coral border */
+    background-color: #FFDFDF;
+    color: #5A3D3D;
+    border: 1px solid #FF6B6B;
     border-radius: 4px;
 }
 
@@ -161,14 +122,14 @@ form button {
     font-size: 14px;
     border: none;
     border-radius: 4px;
-    background-color: #FF9E9E; /* Pastel Coral for button background */
-    color: #5A3D3D; /* Deep Rose text */
+    background-color: #FF9E9E;
+    color: #5A3D3D;
     cursor: pointer;
     transition: background-color 0.3s ease;
 }
 
 form button:hover {
-    background-color: #FF7F7F; /* Slightly darker Pastel Coral on hover */
+    background-color: #FF7F7F;
 }
 
 .video-container {
@@ -184,58 +145,82 @@ form button:hover {
     border: 1px solid #FFCCCC; /* Pastel Red border */
 }
 
-body, html {
-    height: 100%;
-    margin: 0;
-}
-
-.container-fluid {
-    height: 100%;
-}
-
-.row {
-    height: 100%;
-}
-
-.sidebar {
-    height: 100%;
-    background-color: #FFCCCC; /* Pastel Red for sidebar background */
-    padding: 20px;
-}
-
 .nav-link.active {
-    background-color: #FF9E9E; /* Pastel Coral for active link background */
+    background-color: #FF9E9E;
     font-weight: bold;
-    color: #5A3D3D; /* Deep Rose text */
+    color: #5A3D3D;
 }
 
 .btn-primary {
-    background-color: #FF9E9E; /* Pastel Coral for primary buttons */
+    background-color: #FF9E9E;
     border-color: #FF9E9E;
-    color: #5A3D3D; /* Deep Rose text */
+    color: #5A3D3D;
     transition: background-color 0.3s ease;
 }
 
 .btn-primary:hover {
-    background-color: #FF7F7F; /* Slightly darker Pastel Coral on hover */
+    background-color: #FF7F7F;
     border-color: #FF7F7F;
 }
 
 .btn-secondary {
-    background-color: #FF6B6B; /* Pastel Coral for secondary buttons */
-    color: #5A3D3D; /* Deep Rose text */
+    background-color: #FF6B6B;
+    color: #5A3D3D;
     border-color: #5A3D3D;
     transition: background-color 0.3s ease;
 }
 
 .btn-secondary:hover {
-    background-color: #FFCCCC; /* Light Pastel Red on hover */
-    border-color: #FF6B6B; /* Pastel Coral border on hover */
+    background-color: #FFCCCC;
+    border-color: #FF6B6B;
 }
 
-.card {
-    background-color: #FF6B6B; /* Pastel Coral for card background */
-    color: #5A3D3D; /* Deep Rose text */
-    border-color: #5A3D3D;
-    transition: background-color 0.3s ease;
+/*.card {*/
+/*    background-color: #FF6B6B; !* Pastel Coral for card background *!*/
+/*    color: #5A3D3D; !* Deep Rose text *!*/
+/*    border-color: #5A3D3D;*/
+/*    transition: background-color 0.3s ease;*/
+/*}*/
+
+.card-yellow {
+    background: #FFD700;
+    color: #5A3D3D;
+}
+
+.card-yellow > .card-body {
+    background-color: #FFF4CC;
+}
+
+.card-red {
+    background-color: #DC3545;
+    border-color: #DC3545;
+}
+
+.card-red > .card-body {
+    background-color: #F5C6CB;
+    color: #5A3D3D;
+}
+
+/* Deep Green */
+.card-green {
+    background-color: #28A745;
+    border-color: #28A745;
+}
+
+.card-green > .card-body {
+    background-color: #C3E6CB;
+    color: #5A3D3D;
+
+}
+
+.card-pink {
+    background-color: #FF6B6B;
+}
+
+.card-pink > .card-body {
+    background: #FFCCCC;
+}
+
+.nav-link.active {
+    background-color: #FF6B6B !important;
 }
