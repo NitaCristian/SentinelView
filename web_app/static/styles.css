@@ -224,3 +224,42 @@ form button:hover {
 .nav-link.active {
     background-color: #FF6B6B !important;
 }
+
+.table-blue {
+    background-color: #87CEEB;
+    border-color: #87CEEB;
+}
+
+.table-blue thead {
+    background-color: #B0E0E6;
+    color: #333;
+}
+
+.table-blue tbody tr {
+    background-color: #E6F7FF;
+    color: #333;
+}
+
+.table-blue tbody tr:nth-child(odd) {
+    background-color: #D6EAF8;
+}
+
+.card-purple {
+    background-color: #D5A6F2;
+    border-color: #D5A6F2;
+}
+
+.card-purple-body {
+    background-color: #EDE7F6;
+    color: #333;
+}
+
+.card-purple .card-header {
+    background-color: #C9A3E8;
+    color: #fff;
+}
+
+video {
+    border-radius: 0.25rem;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
