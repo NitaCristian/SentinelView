@@ -159,7 +159,7 @@ def process_video(video_path):
                 continue
 
             track_id = track.track_id
-            bbox = track.to_tlbr()
+            bbox = track.to_ltwh()
             x1, y1, x2, y2 = map(int, bbox)
 
             # Drawing bounding box and ID

@@ -7,9 +7,10 @@ import numpy as np
 from PyQt5.QtWidgets import QApplication, QMainWindow, QPushButton, QVBoxLayout, QWidget, QLabel, QComboBox
 from PyQt5.QtCore import QTimer, QThread, pyqtSignal
 from PyQt5.QtGui import QImage, QPixmap
+import subprocess
+import webbrowser
 
 
-# Movement detection and recording logic
 def detect_movement(frame, mog2):
     """
     Detects movement in the frame using MOG2 background subtractor and morphological operations.
@@ -42,12 +43,12 @@ def start_recording(frame, fourcc):
     tuple: The VideoWriter object and the start time of the recording.
     """
 
-    if not os.path.exists('./detections'):
-        os.makedirs('./detections')
+    if not os.path.exists('desktop_app/detections'):
+        os.makedirs('desktop_app/detections')
     timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-    filename = os.path.join('detections', f'{timestamp}.avi')
+    filename = os.path.join('desktop_app/detections', f'{timestamp}.avi')
     out = cv2.VideoWriter(filename, fourcc, 20.0, (frame.shape[1], frame.shape[0]))
-    return out, time.time()
+    return out, time.time(), filename
 
 
 def calculate_fps(start_time, frame_count):
@@ -122,6 +123,7 @@ class VideoThread(QThread):
         self.recording_start_time = None
         self.frame_count = 0
         self.fps_start_time = time.time()
+        self.recording_path = ""
 
     def start_camera(self, camera_index=0):
         self.cap = cv2.VideoCapture(0)
@@ -165,19 +167,19 @@ class VideoThread(QThread):
                 self.movement_counter = 0
 
             if self.movement_counter > 30 and not self.recording:
-                self.out, self.recording_start_time = start_recording(frame, self.fourcc)
+                self.out, self.recording_start_time, self.recording_path = start_recording(frame, self.fourcc)
                 self.recording = True
 
             if self.recording:
                 self.out.write(frame)
-                cv2.putText(frame, "Recording", (10, 70), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2, cv2.LINE_AA)
-                cv2.circle(frame, (30, 30), 10, (0, 0, 255), -1)
+                cv2.putText(frame, "Recording", (40, 70), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 1, cv2.LINE_AA)
+                cv2.circle(frame, (20, 60), 10, (0, 0, 255), -1)
                 elapsed_time = time.time() - self.recording_start_time
-                cv2.putText(frame, f'Time: {elapsed_time:.2f}s', (10, 110), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2,
-                            cv2.LINE_AA)
+                cv2.putText(frame, f'Time: {elapsed_time:.2f}s', (10, 110), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 1, cv2.LINE_AA)
                 if time.time() - self.recording_start_time >= 10:
                     self.recording = False
                     self.out.release()
+                    subprocess.Popen(['python', "movement_analysis.py", self.recording_path])
 
             fps = calculate_fps(self.fps_start_time, self.frame_count)
             cv2.putText(frame, f'FPS: {fps:.2f}', (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2, cv2.LINE_AA)
@@ -215,10 +217,14 @@ class MainWindow(QMainWindow):
         self.start_button = QPushButton("Start Detection", self)
         self.start_button.clicked.connect(self.toggle_detection)
 
+        self.launch_button = QPushButton("Launch Portal", self)
+        self.launch_button.clicked.connect(self.launch_website)
+
         self.layout = QVBoxLayout()
         self.layout.addWidget(self.video_label)
         self.layout.addWidget(self.camera_selector)
         self.layout.addWidget(self.start_button)
+        self.layout.addWidget(self.launch_button)
 
         self.container = QWidget()
         self.container.setLayout(self.layout)
@@ -248,6 +254,9 @@ class MainWindow(QMainWindow):
     def closeEvent(self, event):
         self.video_thread.stop_camera()
         event.accept()
+
+    def launch_website(self, event):
+        webbrowser.open("http://127.0.0.1:5000/")
 
 
 if __name__ == "__main__":
