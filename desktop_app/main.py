@@ -126,6 +126,8 @@ class VideoThread(QThread):
         self.recording_path = ""
 
     def start_camera(self, camera_index=0):
+        if self.cap is not None and self.cap.isOpened():
+            return
         self.cap = cv2.VideoCapture(0)
         if not self.cap.isOpened():
             print("Error: Could not open camera.")
@@ -239,6 +241,7 @@ class MainWindow(QMainWindow):
 
     def toggle_detection(self):
         if self.video_thread.detecting:
+            # self.video_thread.stop_camera()
             self.video_thread.toggle_detection()
             self.start_button.setText("Start Detection")
         else:
