@@ -8,7 +8,7 @@
         <div class="row">
             <div class="col-md-4">
                 <div class="profile-header">
-                    <img src="{{ session['user']['profile_photo'] if session['user']['profile_photo'] else 'https://picsum.photos/seed/' + session['user']['username'] + '/200' }}"
+                    <img src="{{ user.profile_photo if user.profile_photo else 'https://picsum.photos/seed/' + session['user']['username'] + '/200' }}"
                          alt="Profile picture" class="rounded-circle me-2" width="200" height="200">
                     <div class="profile-info">
                         <h3>{{ user.name }}</h3>

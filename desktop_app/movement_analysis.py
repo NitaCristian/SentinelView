@@ -117,11 +117,11 @@ def process_video(video_path):
     width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
     height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
     basename = os.path.basename(video_path)
-    annotated_video_path = os.path.join('analyses', f'{os.path.splitext(basename)[0]}_annotated.avi')
+    annotated_video_path = os.path.join('analyses', f'{os.path.splitext(basename)[0]}_annotated.mp4')
     summary_path = os.path.join('analyses', f'{os.path.splitext(basename)[0]}_summary.txt')
 
     # Initialize video writer
-    fourcc = cv2.VideoWriter_fourcc(*'XVID')
+    fourcc = cv2.VideoWriter_fourcc(*'mp4v')
     out = cv2.VideoWriter(annotated_video_path, fourcc, fps, (width, height))
 
     summary_lines = []
@@ -147,7 +147,9 @@ def process_video(video_path):
                 curr_class = classes[cls_id]
 
                 if curr_class in ['person', 'dog', 'cat']:
-                    x, y, w, h = map(int, box.xywh[0])
+                    x, y, x2, y2 = map(int, box.xyxy[0])
+                    w = x2 - x
+                    h = y2 - y
                     detections.append(([x, y, w, h], conf, cls_id))
 
         # Update tracker
@@ -193,10 +195,10 @@ if __name__ == "__main__":
         print("Usage: python movement_analysis.py <file_path>")
         sys.exit(1)
 
-    model = YOLO('yolov8n.pt')
+    model = YOLO('desktop_app/yolov8n.pt')
     tracker = DeepSort(max_age=30, n_init=3, nn_budget=70)
 
-    with open("./coco.names", "r") as f:
+    with open("desktop_app/coco.names", "r") as f:
         classes = [line.strip() for line in f.readlines()]
 
     file_path = sys.argv[1]

@@ -1,10 +1,13 @@
+import os
+
 import cv2
 from flask import Blueprint, render_template, request, redirect, url_for, session, Response
 import requests
 from datetime import datetime, timedelta
 from collections import Counter
-routes = Blueprint('routes', __name__)
 
+routes = Blueprint('routes', __name__)
+ANALYSES_FOLDER = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'analyses'))
 API_BASE_URL = "http://127.0.0.1:5001/api"
 
 
@@ -60,6 +63,7 @@ def browse_events():
     # Fetch all events from the API
     response = requests.get(f"{API_BASE_URL}/get_events")
     events = response.json()['events'] if response.status_code == 200 else []
+    events.sort(key=lambda x: x['timestamp'], reverse=True)
 
     return render_template('browse_events.html', events=events)
 
@@ -74,18 +78,27 @@ def event_details(event_id):
     event = response_event.json() if response_event.status_code == 200 else {}
 
     # If event details are fetched successfully, fetch the associated footage
+    video_url = ''
+    analysis = ''
     if event:
         footage_id = event.get('footage_id')
         if footage_id:
             response_footage = requests.get(f"{API_BASE_URL}/get_footage_details/{footage_id}")
-            footage = response_footage.json() if response_footage.status_code == 200 else None
+            footage_path = response_footage.json() if response_footage.status_code == 200 else None
+            video_url = url_for('routes.get_analysis_file', filename=footage_path['file_path'])
+            base_name = os.path.splitext(footage_path['file_path'])[0].rsplit('_', 1)[0]
+            new_filename = f"{base_name}_summary.txt"
+            analysis_path = os.path.join(ANALYSES_FOLDER, new_filename)
+            with open(analysis_path, 'r') as file:
+                analysis = file.read()
+
         else:
             footage = None
     else:
         footage = None
 
     # Render a template with the event details, including the footage
-    return render_template('event_details.html', event=event, footage=footage)
+    return render_template('event_details.html', event=event, video_url=video_url, analysis=analysis)
 
 
 @routes.route('/login', methods=['GET', 'POST'])
@@ -182,6 +195,7 @@ def profile():
     response = requests.get(f"{API_BASE_URL}/user", headers={'Authorization': f"{user['token']}"})
     if response.status_code == 200:
         user_info = response.json()
+        print(user_info)
         return render_template('profile.html', user=user_info)
 
     return redirect(url_for('routes.login'))

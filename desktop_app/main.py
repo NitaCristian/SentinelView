@@ -7,8 +7,9 @@ import numpy as np
 from PyQt5.QtWidgets import QApplication, QMainWindow, QPushButton, QVBoxLayout, QWidget, QLabel, QComboBox
 from PyQt5.QtCore import QTimer, QThread, pyqtSignal
 from PyQt5.QtGui import QImage, QPixmap
-import subprocess
 import webbrowser
+import shutil
+import os
 
 
 def detect_movement(frame, mog2):
@@ -43,12 +44,12 @@ def start_recording(frame, fourcc):
     tuple: The VideoWriter object and the start time of the recording.
     """
 
-    if not os.path.exists('desktop_app/detections'):
-        os.makedirs('desktop_app/detections')
+    if not os.path.exists('desktop_app/temp'):
+        os.makedirs('desktop_app/temp')
     timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-    filename = os.path.join('desktop_app/detections', f'{timestamp}.avi')
+    filename = os.path.join('desktop_app/temp', f'{timestamp}.mp4')
     out = cv2.VideoWriter(filename, fourcc, 20.0, (frame.shape[1], frame.shape[0]))
-    return out, time.time(), filename
+    return out, time.time()
 
 
 def calculate_fps(start_time, frame_count):
@@ -117,7 +118,7 @@ class VideoThread(QThread):
         self.detecting = False
         self.recording = False
         self.mog2 = cv2.createBackgroundSubtractorMOG2(500, 16, True)
-        self.fourcc = cv2.VideoWriter_fourcc(*'XVID')
+        self.fourcc = cv2.VideoWriter_fourcc(*'mp4v')
         self.out = None
         self.movement_counter = 0
         self.recording_start_time = None
@@ -169,7 +170,7 @@ class VideoThread(QThread):
                 self.movement_counter = 0
 
             if self.movement_counter > 30 and not self.recording:
-                self.out, self.recording_start_time, self.recording_path = start_recording(frame, self.fourcc)
+                self.out, self.recording_start_time = start_recording(frame, self.fourcc)
                 self.recording = True
 
             if self.recording:
@@ -181,7 +182,13 @@ class VideoThread(QThread):
                 if time.time() - self.recording_start_time >= 10:
                     self.recording = False
                     self.out.release()
-                    subprocess.Popen(['python', "movement_analysis.py", self.recording_path])
+                    if not os.path.exists('desktop_app/detections'):
+                        os.makedirs('desktop_app/detections')
+                    old_path = 'temp/file.txt' #TODO I need this
+                    file_name = os.path.basename(old_path)
+                    new_path = os.path.join('desktop_app/detections', file_name)
+                    shutil.move(old_path, new_path)
+
 
             fps = calculate_fps(self.fps_start_time, self.frame_count)
             cv2.putText(frame, f'FPS: {fps:.2f}', (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2, cv2.LINE_AA)

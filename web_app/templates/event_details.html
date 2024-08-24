@@ -13,8 +13,7 @@
             <div class="card-body card-purple-body">
                 <h5 class="card-title">Event: {{ event.title }}</h5>
                 <p class="card-text">Timestamp: {{ event.timestamp }}</p>
-                <p class="card-text">Camera: {{ event.camera_name }}</p>
-                <p class="card-text">Description: {{ event.description }}</p>
+                <p class="card-text">Description: {{ event.event_type }}</p>
             </div>
         </div>
 
@@ -24,7 +23,7 @@
             </div>
             <div class="card-body card-purple-body">
                 <video controls style="max-width: 100%;">
-                    <source src="../desktop_app/analyses/{{ footage.file_path }}" type="video/mp4">
+                    <source src="{{ video_url }}" type="video/mp4">
                     Your browser does not support the video tag.
                 </video>
             </div>
@@ -35,7 +34,7 @@
                 Analysis
             </div>
             <div class="card-body card-purple-body">
-                <p class="card-text">Add your analysis content here...</p>
+                <p class="card-text">{{ analysis }}</p>
             </div>
         </div>
     </div>

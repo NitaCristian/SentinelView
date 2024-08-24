@@ -1,11 +1,12 @@
 import subprocess
+import sys
 
 if __name__ == "__main__":
-    scripts = ['api/app.py', 'desktop_app/main.py', 'web_app/app.py']
+    scripts = ['api/app.py', 'desktop_app/main.py', 'web_app/app.py', 'desktop_app/watcher.py']
     processes = []
 
     for script in scripts:
-        process = subprocess.Popen(["python", script], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        process = subprocess.Popen(["python", script], stderr=sys.stderr, stdout=sys.stdout)
         processes.append(process)
 
     for process in processes:

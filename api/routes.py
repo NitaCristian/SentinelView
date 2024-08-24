@@ -31,7 +31,7 @@ def login_user():
     user = User.query.filter_by(username=data['username'], password=data['password']).first()
     if user:
         token = generate_token(user.id)
-        return jsonify({'token': token})
+        return jsonify({'token': token, 'profile_photo': user.profile_photo})
     else:
         return jsonify({'message': 'Invalid credentials'}), 401
 
@@ -66,7 +66,7 @@ def user_details():
         if user_id:
             user = User.query.get(user_id)
             if user:
-                return jsonify({'username': user.username, 'email': user.email})
+                return jsonify({'username': user.username, 'email': user.email, 'profile_photo': user.profile_photo})
         return jsonify({'message': 'User not found'}), 404
 
     elif request.method == 'POST':
