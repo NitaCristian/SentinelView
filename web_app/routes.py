@@ -17,15 +17,17 @@ def home():
         return redirect(url_for('routes.login'))
 
     # Fetch events from the API
-    response = requests.get(f"{API_BASE_URL}/events")
-    events = response.json() if response.status_code == 200 else []
-
+    response = requests.get(f"{API_BASE_URL}/get_events")
+    data = response.json() if response.status_code == 200 else []
+    print(len(data))
+    print(data)
     # Filter events from the last 24 hours
     now = datetime.now()
     recent_events = [
-        event for event in events
-        if datetime.strptime(event['date'], '%Y-%m-%d %H:%M:%S') >= now - timedelta(hours=24)
+        event for event in data['events']
+        if datetime.strptime(event['timestamp'], '%a, %d %b %Y %H:%M:%S %Z') >= now - timedelta(hours=24)
     ]
+    recent_events.sort(key=lambda x: x['id'], reverse=True)
 
     # Generate dates for the last two weeks
     today = now.date()
@@ -33,9 +35,9 @@ def home():
 
     # Initialize a Counter for event counts per day
     event_counts_dict = Counter(
-        datetime.strptime(event['date'], '%Y-%m-%d %H:%M:%S').strftime('%Y-%m-%d')
-        for event in events if
-        datetime.strptime(event['date'], '%Y-%m-%d %H:%M:%S').date() in [today - timedelta(days=i) for i in range(14)]
+        datetime.strptime(event['timestamp'], '%a, %d %b %Y %H:%M:%S %Z').strftime('%Y-%m-%d')
+        for event in data['events'] if
+        datetime.strptime(event['timestamp'], '%a, %d %b %Y %H:%M:%S %Z').date() in [today - timedelta(days=i) for i in range(14)]
     )
 
     # Create a list of event counts corresponding to the `dates` list

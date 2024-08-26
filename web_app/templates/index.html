@@ -25,36 +25,36 @@
         </div>
 
         <div class="col-md-8">
-            <a href="{{ url_for('routes.browse_events') }}" class="text-decoration-none">
-                <div class="card card-yellow mb-3">
-                    <div class="card-header">Recent Events</div>
-                    <div class="card-body">
-                        {% if recent_events %}
-                            <table class="table table-hover">
-                                <thead>
-                                <tr>
-                                    <th scope="col">Event</th>
-                                    <th scope="col">Date</th>
+            <div class="card card-yellow mb-3">
+                <div class="card-header">Recent Events</div>
+                <div class="card-body">
+                    {% if recent_events %}
+                        <table class="table table-hover">
+                            <thead>
+                            <tr>
+                                <th scope="col">Event</th>
+                                <th scope="col">Date</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for event in recent_events %}
+                                <tr onclick="window.location='{{ url_for('routes.event_details', event_id=event.id) }}'"
+                                    style="cursor: pointer;">
+                                    <td><i class="fas fa-video"></i> {{ event.title }}</td>
+                                    <td><small class="text-muted">{{ event.timestamp }}</small></td>
                                 </tr>
-                                </thead>
-                                <tbody>
-                                {% for event in recent_events %}
-                                    <tr>
-                                        <td><i class="fas fa-video"></i> {{ event.description }}</td>
-                                        <td><small class="text-muted">{{ event.date }}</small></td>
-                                    </tr>
-                                {% endfor %}
-                                </tbody>
-                            </table>
-                        {% else %}
-                            <div class="alert alert-info" role="alert">
-                                No recent events.
-                            </div>
-                        {% endif %}
-                    </div>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    {% else %}
+                        <div class="alert alert-info" role="alert">
+                            No recent events.
+                        </div>
+                    {% endif %}
                 </div>
-            </a>
+            </div>
         </div>
+
 
         <div class="row mt-5">
             <div class="col-md-12">
