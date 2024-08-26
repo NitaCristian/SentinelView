@@ -1,4 +1,6 @@
 from flask import Blueprint, jsonify, request
+
+from api.email_helper import send_notifications
 from models import User, Camera, Event, Footage, Notification, db
 from auth import generate_token, decode_token
 from datetime import datetime
@@ -207,6 +209,9 @@ def insert_event():
                       footage_id=data['footage_id'])
     db.session.add(new_event)
     db.session.commit()
+
+    send_notifications(new_event.id)
+
     return jsonify({'message': 'Event inserted successfully', 'id': new_event.id})
 
 
