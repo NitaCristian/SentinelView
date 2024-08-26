@@ -63,7 +63,7 @@ def browse_events():
     # Fetch all events from the API
     response = requests.get(f"{API_BASE_URL}/get_events")
     events = response.json()['events'] if response.status_code == 200 else []
-    events.sort(key=lambda x: x['timestamp'], reverse=True)
+    events.sort(key=lambda x: x['id'], reverse=True)
 
     return render_template('browse_events.html', events=events)
 
@@ -85,7 +85,8 @@ def event_details(event_id):
         if footage_id:
             response_footage = requests.get(f"{API_BASE_URL}/get_footage_details/{footage_id}")
             footage_path = response_footage.json() if response_footage.status_code == 200 else None
-            video_url = url_for('routes.get_analysis_file', filename=footage_path['file_path'])
+            video_url = footage_path['file_path']  # url_for('routes.get_analysis_file', filename=footage_path['file_path'])
+            print(footage_path['file_path'])
             base_name = os.path.splitext(footage_path['file_path'])[0].rsplit('_', 1)[0]
             new_filename = f"{base_name}_summary.txt"
             analysis_path = os.path.join(ANALYSES_FOLDER, new_filename)
@@ -109,7 +110,8 @@ def login():
         response = requests.post(f"{API_BASE_URL}/login", json={'username': username, 'password': password})
         if response.status_code == 200:
             token = response.json().get('token')
-            session['user'] = {'username': username, 'token': token, 'profile_photo': response.json().get('profile_photo')}
+            session['user'] = {'username': username, 'token': token,
+                               'profile_photo': response.json().get('profile_photo')}
             return redirect(url_for('routes.home'))
         else:
             return render_template('login.html', message="Invalid credentials")

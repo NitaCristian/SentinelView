@@ -49,7 +49,7 @@ def start_recording(frame, fourcc):
     timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
     filename = os.path.join('desktop_app/temp', f'{timestamp}.mp4')
     out = cv2.VideoWriter(filename, fourcc, 20.0, (frame.shape[1], frame.shape[0]))
-    return out, time.time()
+    return out, time.time(), filename
 
 
 def calculate_fps(start_time, frame_count):
@@ -170,7 +170,7 @@ class VideoThread(QThread):
                 self.movement_counter = 0
 
             if self.movement_counter > 30 and not self.recording:
-                self.out, self.recording_start_time = start_recording(frame, self.fourcc)
+                self.out, self.recording_start_time, self.recording_path = start_recording(frame, self.fourcc)
                 self.recording = True
 
             if self.recording:
@@ -184,10 +184,9 @@ class VideoThread(QThread):
                     self.out.release()
                     if not os.path.exists('desktop_app/detections'):
                         os.makedirs('desktop_app/detections')
-                    old_path = 'temp/file.txt' #TODO I need this
-                    file_name = os.path.basename(old_path)
+                    file_name = os.path.basename(self.recording_path)
                     new_path = os.path.join('desktop_app/detections', file_name)
-                    shutil.move(old_path, new_path)
+                    shutil.move(self.recording_path, new_path)
 
 
             fps = calculate_fps(self.fps_start_time, self.frame_count)
