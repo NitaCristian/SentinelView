@@ -19,8 +19,6 @@ def home():
     # Fetch events from the API
     response = requests.get(f"{API_BASE_URL}/get_events")
     data = response.json() if response.status_code == 200 else []
-    print(len(data))
-    print(data)
     # Filter events from the last 24 hours
     now = datetime.now()
     recent_events = [
