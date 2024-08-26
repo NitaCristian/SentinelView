@@ -50,7 +50,7 @@ def home():
 
 @routes.route('/logout')
 def logout():
-    if 'user' not in session:
+    if 'user' in session:
         session.pop('user', None)
     return redirect(url_for('routes.home'))
 
@@ -109,7 +109,7 @@ def login():
         response = requests.post(f"{API_BASE_URL}/login", json={'username': username, 'password': password})
         if response.status_code == 200:
             token = response.json().get('token')
-            session['user'] = {'username': username, 'token': token}
+            session['user'] = {'username': username, 'token': token, 'profile_photo': response.json().get('profile_photo')}
             return redirect(url_for('routes.home'))
         else:
             return render_template('login.html', message="Invalid credentials")
