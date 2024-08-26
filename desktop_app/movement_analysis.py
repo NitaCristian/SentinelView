@@ -2,11 +2,39 @@ import math
 import os
 import sys
 import cv2
+import subprocess
 import requests
 from ultralytics import YOLO
 from deep_sort_realtime.deepsort_tracker import DeepSort
 
 API_URL = "http://127.0.0.1:5001/api"
+
+
+def run_ffmpeg(input_path, output_path):
+    """
+    Reprocesses the video using ffmpeg to ensure compatibility.
+
+    Parameters:
+    input_path (str): Path to the input video file.
+    output_path (str): Path to save the reprocessed video.
+    """
+    try:
+        # Construct the ffmpeg command
+        command = [
+            'ffmpeg',
+            '-i', input_path,
+            '-c:v', 'libx264',
+            '-crf', '23',
+            '-preset', 'fast',
+            '-c:a', 'aac',
+            '-b:a', '128k',
+            output_path
+        ]
+        # Run the command
+        subprocess.run(command, check=True)
+        print(f"Reprocessed video saved to {output_path}.")
+    except subprocess.CalledProcessError as e:
+        print(f"Error during ffmpeg processing: {e}")
 
 
 def upload_to_api(video_path, summary_path):
@@ -186,8 +214,12 @@ def process_video(video_path):
         for line in summary_lines:
             file.write(line + '\n')
 
-    # Upload the annotated video and summary to the API
-    upload_to_api(annotated_video_path, summary_path)
+    # Reprocess the video using ffmpeg
+    reprocessed_video_path = os.path.join('analyses', f'{os.path.splitext(basename)[0]}_r.mp4')
+    run_ffmpeg(annotated_video_path, reprocessed_video_path)
+
+    # Upload the reprocessed video and summary to the API
+    upload_to_api(reprocessed_video_path, summary_path)
 
 
 if __name__ == "__main__":
