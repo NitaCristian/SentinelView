@@ -117,7 +117,7 @@ def get_body(event_id):
             <p>Best regards,<br>Your Security Team</p>
         </div>
         <div class="footer">
-            <p>&copy; 2024 Your Security Company. All rights reserved.</p>
+            <p>&copy; 2024 SentinelView. All rights reserved.</p>
         </div>
     </div>
 </body>
