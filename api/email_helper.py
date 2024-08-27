@@ -114,7 +114,6 @@ def get_body(event_id):
             <p>You can view the live feed or check the recorded footage by clicking the button below:</p>
             <p><a href="localhost:5000/event/[ID]" class="button">View Surveillance Feed</a></p>
             <p>Stay alert and stay safe.</p>
-            <p>Best regards,<br>Your Security Team</p>
         </div>
         <div class="footer">
             <p>&copy; 2024 SentinelView. All rights reserved.</p>

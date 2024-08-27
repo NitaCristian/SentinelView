@@ -18,7 +18,7 @@ def home():
 
     # Fetch events from the API
     response = requests.get(f"{API_BASE_URL}/get_events")
-    data = response.json() if response.status_code == 200 else []
+    data = response.json() if response.status_code == 200 else {}
     # Filter events from the last 24 hours
     now = datetime.now()
     recent_events = [
@@ -35,7 +35,8 @@ def home():
     event_counts_dict = Counter(
         datetime.strptime(event['timestamp'], '%a, %d %b %Y %H:%M:%S %Z').strftime('%Y-%m-%d')
         for event in data['events'] if
-        datetime.strptime(event['timestamp'], '%a, %d %b %Y %H:%M:%S %Z').date() in [today - timedelta(days=i) for i in range(14)]
+        datetime.strptime(event['timestamp'], '%a, %d %b %Y %H:%M:%S %Z').date() in [today - timedelta(days=i) for i in
+                                                                                     range(14)]
     )
 
     # Create a list of event counts corresponding to the `dates` list
@@ -85,7 +86,8 @@ def event_details(event_id):
         if footage_id:
             response_footage = requests.get(f"{API_BASE_URL}/get_footage_details/{footage_id}")
             footage_path = response_footage.json() if response_footage.status_code == 200 else None
-            video_url = footage_path['file_path']  # url_for('routes.get_analysis_file', filename=footage_path['file_path'])
+            video_url = footage_path[
+                'file_path']  # url_for('routes.get_analysis_file', filename=footage_path['file_path'])
             print(footage_path['file_path'])
             base_name = os.path.splitext(footage_path['file_path'])[0].rsplit('_', 1)[0]
             new_filename = f"{base_name}_summary.txt"
@@ -218,13 +220,13 @@ def video_feed():
 
 # Generate frames for live video feed
 def generate_frames():
+    camera = cv2.VideoCapture(0)
+
     while True:
-        success, frame = False, False  # camera.read()
+        success, frame = camera.read()
         if not success:
             break
         else:
             ret, buffer = cv2.imencode('.jpg', frame)
             frame = buffer.tobytes()
             yield b'--frame\r\n' b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n'
-
-# camera = cv2.VideoCapture()

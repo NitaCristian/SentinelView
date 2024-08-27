@@ -134,9 +134,9 @@ form button:hover {
 
 .video-container {
     display: flex;
-    justify-content: center;
+    /*justify-content: center;*/
     align-items: center;
-    height: calc(100vh - 40px);
+    /*height: calc(100vh - 40px);*/
 }
 
 .video-container img {

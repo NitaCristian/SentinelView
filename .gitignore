@@ -166,5 +166,6 @@ web_app/.idea
 *.weights
 *.csv
 *.txt
-
+!requirements.txt
 /uploads
+!yolov8n.pt
