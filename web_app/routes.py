@@ -88,7 +88,6 @@ def event_details(event_id):
             footage_path = response_footage.json() if response_footage.status_code == 200 else None
             video_url = footage_path[
                 'file_path']  # url_for('routes.get_analysis_file', filename=footage_path['file_path'])
-            print(footage_path['file_path'])
             base_name = os.path.splitext(footage_path['file_path'])[0].rsplit('_', 1)[0]
             new_filename = f"{base_name}_summary.txt"
             analysis_path = os.path.join(ANALYSES_FOLDER, new_filename)
@@ -199,7 +198,6 @@ def profile():
     response = requests.get(f"{API_BASE_URL}/user", headers={'Authorization': f"{user['token']}"})
     if response.status_code == 200:
         user_info = response.json()
-        print(user_info)
         return render_template('profile.html', user=user_info)
 
     return redirect(url_for('routes.login'))
