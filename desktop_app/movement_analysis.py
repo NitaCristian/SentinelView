@@ -19,18 +19,18 @@ def run_ffmpeg(input_path, output_path):
     output_path (str): Path to save the reprocessed video.
     """
     try:
-        # Construct the ffmpeg command
+        # Construct the ffmpeg command to reprocess the video
         command = [
             'ffmpeg',
             '-i', input_path,
-            '-c:v', 'libx264',
-            '-crf', '23',
-            '-preset', 'fast',
-            '-c:a', 'aac',
-            '-b:a', '128k',
+            '-c:v', 'libx264',  # Video codec
+            '-crf', '23',  # Constant Rate Factor (quality)
+            '-preset', 'fast',  # Encoding speed/quality tradeoff
+            '-c:a', 'aac',  # Audio codec
+            '-b:a', '128k',  # Audio bitrate
             output_path
         ]
-        # Run the command
+        # Execute the command
         subprocess.run(command, check=True)
         print(f"Reprocessed video saved to {output_path}.")
     except subprocess.CalledProcessError as e:
@@ -46,11 +46,11 @@ def upload_to_api(video_path, summary_path):
     summary_path (str): Path to the summary text file.
     """
     try:
-        # Read the summary file content
+        # Read the content of the summary file
         with open(summary_path, 'r') as summary_file:
             summary_content = summary_file.read()
 
-        # Prepare the data payload
+        # Prepare the data payload for API
         data = {
             'file_path': os.path.basename(video_path),
             'duration': get_video_duration(video_path)
@@ -61,7 +61,7 @@ def upload_to_api(video_path, summary_path):
         }
 
         proxies = {'https': 'http://127.0.0.1:5001'}
-        # Send the POST request to the API
+        # Send POST request to the API
         response = requests.post(f'{API_URL}/insert_footage', headers=headers, json=data, verify=False, proxies=proxies)
 
         if response.status_code == 200:
@@ -87,6 +87,7 @@ def insert_event(footage_id, summary):
     summary (str): Summary details to include in the event title.
     """
     try:
+        # Prepare event data
         event_data = {
             'event_type': 'Person Detected',
             'title': f'Footage ID {footage_id}',
@@ -98,7 +99,7 @@ def insert_event(footage_id, summary):
         }
 
         proxies = {'https': 'http://127.0.0.1:5001'}
-        # Send the POST request to insert the event
+        # Send POST request to insert the event
         response = requests.post(f"{API_URL}/insert_event", headers=headers, json=event_data, verify=False,
                                  proxies=proxies)
 
@@ -136,7 +137,7 @@ def process_video(video_path):
     Parameters:
     video_path (str): Path to the input video file.
     """
-    # Create directories if they don't exist
+    # Create output directory if it does not exist
     if not os.path.exists('analyses'):
         os.makedirs('analyses')
 
@@ -148,19 +149,19 @@ def process_video(video_path):
     annotated_video_path = os.path.join('analyses', f'{os.path.splitext(basename)[0]}_annotated.mp4')
     summary_path = os.path.join('analyses', f'{os.path.splitext(basename)[0]}_summary.txt')
 
-    # Initialize video writer
+    # Initialize video writer for annotated video
     fourcc = cv2.VideoWriter_fourcc(*'mp4v')
     out = cv2.VideoWriter(annotated_video_path, fourcc, fps, (width, height))
 
     summary_lines = []
-    logged_tracks = set()  # Set to keep track of logged person IDs
+    logged_tracks = set()  # To keep track of logged person IDs
 
     while cap.isOpened():
         ret, frame = cap.read()
         if not ret:
             break
 
-        # Detect objects in the frame
+        # Detect objects in the frame using the model
         results = model(frame, stream=True, verbose=False)
 
         # Filter detections for persons
@@ -180,10 +181,10 @@ def process_video(video_path):
                     h = y2 - y
                     detections.append(([x, y, w, h], conf, cls_id))
 
-        # Update tracker
+        # Update tracker with current frame's detections
         tracks = tracker.update_tracks(detections, frame=frame)
 
-        # Draw bounding boxes and track ids
+        # Draw bounding boxes and track ids on the frame
         for track in tracks:
             if not track.is_confirmed():
                 continue
@@ -192,17 +193,17 @@ def process_video(video_path):
             bbox = track.to_ltwh()
             x1, y1, x2, y2 = map(int, bbox)
 
-            # Drawing bounding box and ID
+            # Draw bounding box and ID
             cv2.rectangle(frame, (x1, y1), (x2, y2), (0, 255, 0), 2)
             cv2.putText(frame, f'ID: {track_id}', (x1, y1 - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.75, (0, 255, 0), 2)
 
             # Record summary if this ID hasn't been logged yet
             if track_id not in logged_tracks:
-                timestamp = cap.get(cv2.CAP_PROP_POS_MSEC) / 1000.0  # in seconds
+                timestamp = cap.get(cv2.CAP_PROP_POS_MSEC) / 1000.0  # Convert to seconds
                 summary_lines.append(f'Person detected at {timestamp:.2f} seconds, Track ID: {track_id}')
                 logged_tracks.add(track_id)
 
-        # Write the frame to the output video
+        # Write the annotated frame to the output video
         out.write(frame)
 
     # Release resources
@@ -227,12 +228,15 @@ if __name__ == "__main__":
         print("Usage: python movement_analysis.py <file_path>")
         sys.exit(1)
 
+    # Load the YOLO model and DeepSort tracker
     model = YOLO('desktop_app/yolov8n.pt')
     tracker = DeepSort(max_age=30, n_init=3, nn_budget=70)
 
+    # Load the class names for detection
     with open("desktop_app/coco.names", "r") as f:
         classes = [line.strip() for line in f.readlines()]
 
+    # Process the input video file
     file_path = sys.argv[1]
     print(f"Analyzing video {file_path}")
     process_video(file_path)
