@@ -1,5 +1,5 @@
 from flask import Blueprint, jsonify, request
-from api.email_helper import send_notifications
+from email_helper import send_notifications
 from models import User, Camera, Event, Footage, Notification, db
 from auth import generate_token, decode_token
 from datetime import datetime
