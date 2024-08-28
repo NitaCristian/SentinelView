@@ -177,9 +177,7 @@ def process_video(video_path):
 
                 if curr_class in ['person', 'dog', 'cat']:
                     x, y, x2, y2 = map(int, box.xyxy[0])
-                    w = x2 - x
-                    h = y2 - y
-                    detections.append(([x, y, w, h], conf, cls_id))
+                    detections.append(([x, y, x2, y2], conf, cls_id))
 
         # Update tracker with current frame's detections
         tracks = tracker.update_tracks(detections, frame=frame)
@@ -190,7 +188,7 @@ def process_video(video_path):
                 continue
 
             track_id = track.track_id
-            bbox = track.to_ltwh()
+            bbox = track.to_ltrb()
             x1, y1, x2, y2 = map(int, bbox)
 
             # Draw bounding box and ID

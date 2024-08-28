@@ -147,7 +147,7 @@ class VideoThread(QThread):
         if self.cap is not None and self.cap.isOpened():
             return
         # Open the video capture with the specified camera index
-        self.cap = cv2.VideoCapture(0)
+        self.cap = cv2.VideoCapture(2)
         if not self.cap.isOpened():
             print("Error: Could not open camera.")
             return
