@@ -248,7 +248,7 @@ def video_feed():
 
 # Function to generate frames for the live video feed
 def generate_frames():
-    camera = cv2.VideoCapture(0)  # Open the default camera
+    camera = cv2.VideoCapture(2)  # Open the external camera
 
     while True:
         success, frame = camera.read()  # Capture frame-by-frame
